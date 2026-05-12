@@ -8,6 +8,7 @@
         <relativePath>../../../pom.xml</relativePath>
     </parent>
     <artifactId>quarkus-langchain4j-azure-openai-parent</artifactId>
+    <version>1.9.3-SNAPSHOT</version>
     <name>Quarkus LangChain4j - Azure OpenAI - Parent</name>
     <packaging>pom</packaging>
 

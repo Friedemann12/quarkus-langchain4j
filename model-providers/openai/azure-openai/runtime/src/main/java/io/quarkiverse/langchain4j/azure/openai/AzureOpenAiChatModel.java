@@ -75,6 +75,7 @@ public class AzureOpenAiChatModel implements ChatModel {
     private final Integer seed;
     private final Double topP;
     private final Integer maxTokens;
+    private final Integer maxCompletionTokens;
     private final Double presencePenalty;
     private final Double frequencyPenalty;
     private final Integer maxRetries;
@@ -91,6 +92,7 @@ public class AzureOpenAiChatModel implements ChatModel {
             Integer seed,
             Double topP,
             Integer maxTokens,
+            Integer maxCompletionTokens,
             Double presencePenalty,
             Double frequencyPenalty,
             Duration timeout,
@@ -127,6 +129,7 @@ public class AzureOpenAiChatModel implements ChatModel {
         this.seed = seed;
         this.topP = topP;
         this.maxTokens = maxTokens;
+        this.maxCompletionTokens = maxCompletionTokens;
         this.presencePenalty = presencePenalty;
         this.frequencyPenalty = frequencyPenalty;
         this.maxRetries = getOrDefault(maxRetries, 1);
@@ -151,6 +154,7 @@ public class AzureOpenAiChatModel implements ChatModel {
                 .seed(seed)
                 .topP(topP)
                 .maxTokens(maxTokens)
+                .maxCompletionTokens(maxCompletionTokens)
                 .presencePenalty(presencePenalty)
                 .frequencyPenalty(frequencyPenalty)
                 .responseFormat(responseFormat);
@@ -233,7 +237,8 @@ public class AzureOpenAiChatModel implements ChatModel {
                         .modelName(request.model())
                         .temperature(request.temperature())
                         .topP(request.topP())
-                        .maxOutputTokens(request.maxTokens())
+                        .maxOutputTokens(
+                                request.maxCompletionTokens() != null ? request.maxCompletionTokens() : request.maxTokens())
                         .toolSpecifications(toolSpecifications)
                         .build())
                 .build();
@@ -282,6 +287,7 @@ public class AzureOpenAiChatModel implements ChatModel {
         private Integer seed;
         private Double topP;
         private Integer maxTokens;
+        private Integer maxCompletionTokens;
         private Double presencePenalty;
         private Double frequencyPenalty;
         private Duration timeout;
@@ -363,6 +369,11 @@ public class AzureOpenAiChatModel implements ChatModel {
             return this;
         }
 
+        public Builder maxCompletionTokens(Integer maxCompletionTokens) {
+            this.maxCompletionTokens = maxCompletionTokens;
+            return this;
+        }
+
         public Builder presencePenalty(Double presencePenalty) {
             this.presencePenalty = presencePenalty;
             return this;
@@ -423,6 +434,7 @@ public class AzureOpenAiChatModel implements ChatModel {
                     seed,
                     topP,
                     maxTokens,
+                    maxCompletionTokens,
                     presencePenalty,
                     frequencyPenalty,
                     timeout,

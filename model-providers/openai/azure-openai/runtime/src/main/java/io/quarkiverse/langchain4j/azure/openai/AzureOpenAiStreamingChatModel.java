@@ -80,6 +80,7 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
     private final Double temperature;
     private final Double topP;
     private final Integer maxTokens;
+    private final Integer maxCompletionTokens;
     private final Double presencePenalty;
     private final Double frequencyPenalty;
     private final TokenCountEstimator tokenizer;
@@ -94,6 +95,7 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
             Double temperature,
             Double topP,
             Integer maxTokens,
+            Integer maxCompletionTokens,
             Double presencePenalty,
             Double frequencyPenalty,
             Duration timeout,
@@ -127,6 +129,7 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
         this.temperature = getOrDefault(temperature, 0.7);
         this.topP = topP;
         this.maxTokens = maxTokens;
+        this.maxCompletionTokens = maxCompletionTokens;
         this.presencePenalty = presencePenalty;
         this.frequencyPenalty = frequencyPenalty;
         this.tokenizer = tokenizer;
@@ -148,6 +151,7 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
                 .temperature(temperature)
                 .topP(topP)
                 .maxTokens(maxTokens)
+                .maxCompletionTokens(maxCompletionTokens)
                 .presencePenalty(presencePenalty)
                 .frequencyPenalty(frequencyPenalty)
                 .responseFormat(responseFormat);
@@ -266,7 +270,8 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
                         .modelName(request.model())
                         .temperature(request.temperature())
                         .topP(request.topP())
-                        .maxOutputTokens(request.maxTokens())
+                        .maxOutputTokens(
+                                request.maxCompletionTokens() != null ? request.maxCompletionTokens() : request.maxTokens())
                         .toolSpecifications(toolSpecifications)
                         .build())
                 .build();
@@ -314,6 +319,7 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
         private Double temperature;
         private Double topP;
         private Integer maxTokens;
+        private Integer maxCompletionTokens;
         private Double presencePenalty;
         private Double frequencyPenalty;
         private Duration timeout;
@@ -384,6 +390,11 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
             return this;
         }
 
+        public Builder maxCompletionTokens(Integer maxCompletionTokens) {
+            this.maxCompletionTokens = maxCompletionTokens;
+            return this;
+        }
+
         public Builder presencePenalty(Double presencePenalty) {
             this.presencePenalty = presencePenalty;
             return this;
@@ -443,6 +454,7 @@ public class AzureOpenAiStreamingChatModel implements StreamingChatModel {
                     temperature,
                     topP,
                     maxTokens,
+                    maxCompletionTokens,
                     presencePenalty,
                     frequencyPenalty,
                     timeout,
